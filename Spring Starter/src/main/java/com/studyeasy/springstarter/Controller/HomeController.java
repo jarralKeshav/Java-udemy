@@ -11,4 +11,13 @@ public class HomeController {
         return "home";
 
     }
+    @GetMapping("/book")
+    public String book(Model model) {
+        return "book";
+    }
+
+    @GetMapping("/about")
+    public String about(Model model) {
+        return "about";
+    }
 }
