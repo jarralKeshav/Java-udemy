@@ -1,4 +1,4 @@
-package com.studyeasy.springstarter;
+package com.studyeasy.springBlog;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

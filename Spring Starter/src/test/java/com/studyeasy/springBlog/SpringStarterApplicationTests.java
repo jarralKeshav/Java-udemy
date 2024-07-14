@@ -1,4 +1,4 @@
-package com.studyeasy.springstarter;
+package com.studyeasy.springBlog;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
