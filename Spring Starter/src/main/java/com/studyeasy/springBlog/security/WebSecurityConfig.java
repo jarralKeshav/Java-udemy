@@ -1,5 +1,6 @@
 package com.studyeasy.springBlog.security;
 
+import com.studyeasy.springBlog.utils.constants.Privileges;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -30,6 +31,10 @@ public class WebSecurityConfig {
                     authorize
                             .requestMatchers(WHITELIST)
                             .permitAll()
+                            .requestMatchers("/profile/**").authenticated()
+                            .requestMatchers("/admin/**").hasRole("ADMIN")
+                            .requestMatchers("/editor/**").hasRole("EDITOR")
+                            .requestMatchers("/test/**").hasAuthority(Privileges.ACCESS_ADMIN_PANEL.getPrivilegeName())
                             .anyRequest()
                             .authenticated();
                 })

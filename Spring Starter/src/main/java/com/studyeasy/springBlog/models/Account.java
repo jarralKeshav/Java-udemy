@@ -37,6 +37,6 @@ public class Account {
             (name = "account_authority", joinColumns = {
                     @JoinColumn(name = "account_id", referencedColumnName = "id")},
                     inverseJoinColumns = {
-                    @JoinColumn(name = "authority_id", referencedColumnName = "authorityId")})
-    private Set<Authority>  authoritySet= new HashSet<>();
+                    @JoinColumn(name = "privilege_id", referencedColumnName = "authorityId")})
+    private Set<Authority> authoritySet= new HashSet<>();
 }

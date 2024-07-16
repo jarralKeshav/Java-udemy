@@ -31,7 +31,9 @@ public class AccountService implements UserDetailsService {
 
     public void save(Account account) {             //Account instead of void w.r.t. course
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        account.setRole(Roles.USER.getRole());
+       if(account.getRole()==null){
+           account.setRole(Roles.USER.getRole());
+           }
         accountRepository.save(account);
     }
 
