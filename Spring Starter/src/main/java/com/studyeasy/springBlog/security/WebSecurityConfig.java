@@ -14,7 +14,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-    private static final String[] WHITELIST = {"/", "/login", "/register", "/static/**", "/css/**", "/fonts/**", "/images/**", "/js/**", "/db-console/**"
+    private static final String[] WHITELIST = {"/", "/login", "/register", "/static/**","/js/**", "/css/**", "/fonts/**",
+ "/images/**","/db-console/**"
 
     };
 
@@ -27,32 +28,26 @@ public class WebSecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((authorize) -> {
-                    authorize
-                            .requestMatchers(WHITELIST)
-                            .permitAll()
-                            .requestMatchers("/profile/**").authenticated()
-                            .requestMatchers("/admin/**").hasRole("ADMIN")
-                            .requestMatchers("/editor/**").hasRole("EDITOR")
-                            .requestMatchers("/test/**").hasAuthority(Privileges.ACCESS_ADMIN_PANEL.getPrivilegeName())
-                            .anyRequest()
-                            .authenticated();
-                })
-                .formLogin(form -> {
-                    form.
-                            loginPage("/login").
-                            loginProcessingUrl("/login")
-                            .usernameParameter("email")
-                            .passwordParameter("password")
-                            .defaultSuccessUrl("/", true)
-                            .failureUrl("/login?error")
-                            .permitAll();
-                }).
-                logout(lOut -> {
-                    lOut
-                            .logoutUrl("/logout")
-                            .logoutSuccessUrl("/login");
-                })
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers(WHITELIST)
+                        .permitAll()
+                        .requestMatchers("/profile/**").authenticated()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/editor/**").hasRole("EDITOR")
+                        .requestMatchers("/test/**").hasAuthority(Privileges.ACCESS_ADMIN_PANEL.getPrivilegeName())
+                        .anyRequest()
+                        .authenticated())
+                .formLogin(form -> form.
+                        loginPage("/login").
+                        loginProcessingUrl("/login")
+                        .usernameParameter("email")
+                        .passwordParameter("password")
+                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/login?error")
+                        .permitAll()).
+                logout(lOut -> lOut
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login"))
                 .rememberMe(Customizer.withDefaults());
 
 

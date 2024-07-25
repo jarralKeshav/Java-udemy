@@ -3,6 +3,7 @@ package com.studyeasy.springBlog.services;
 import com.studyeasy.springBlog.models.Post;
 import com.studyeasy.springBlog.repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,9 +27,12 @@ public class PostService {
     public void delete(Post post) {
         postRepository.delete(post);
     }
-    public Post save(Post post) {
+    public void save(Post post) { //did return Post
+        if ((post.getId())== null) {
         post.setCreatedAt(LocalDateTime.now());
-        return postRepository.save(post);
+        }
+        post.setUpdatedAt(LocalDateTime.now());
+        postRepository.save(post);
     }
 
 }

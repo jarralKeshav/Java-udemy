@@ -10,7 +10,6 @@ import com.studyeasy.springBlog.utils.constants.Privileges;
 import com.studyeasy.springBlog.utils.constants.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -49,7 +48,6 @@ public class SeedData implements CommandLineRunner {
         account01.setFirstName("Account01");
         account01.setLastName("lastname01");
 
-
         account02.setEmail("super_editor@editor.com");
         account02.setPassword("superEditor123");
         account02.setFirstName("Super");
@@ -60,14 +58,11 @@ public class SeedData implements CommandLineRunner {
         authorityService.findById(Privileges.ACCESS_ADMIN_PANEL.getPrivilegeId()).ifPresent(authoritySet::add);
         account02.setAuthoritySet(authoritySet);
 
-
-
         account03.setEmail("admin@admin.com");
         account03.setPassword("admin123");
         account03.setFirstName("Admin");
         account03.setLastName("AdminLastName");
         account03.setRole(Roles.ADMIN.getRole());
-
 
         account04.setEmail("editor@editor.com");
         account04.setPassword("editor123");
@@ -75,12 +70,10 @@ public class SeedData implements CommandLineRunner {
         account04.setLastName("EditorLastName");
         account04.setRole(Roles.EDITOR.getRole());
 
-
         accountService.save(account01);
         accountService.save(account02);
         accountService.save(account03);
         accountService.save(account04);
-
 
         List<Post> posts = postService.getAll();
         if (posts.isEmpty()) {
@@ -95,7 +88,6 @@ public class SeedData implements CommandLineRunner {
             post2.setBody("This is a post body............");
             post2.setAccount(account02);
             postService.save(post2);
-
 
         }
     }

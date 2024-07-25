@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long id;
+    private Long id;
 
     private String title;
 
@@ -22,6 +22,9 @@ public class Post {
     private String body;
 
     private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
 
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id", nullable = true)
