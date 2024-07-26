@@ -34,6 +34,9 @@ public class AccountService implements UserDetailsService {
        if(account.getRole()==null){
            account.setRole(Roles.USER.getRole());
            }
+       if(account.getPhoto()==null){
+           account.setPhoto("");
+           }
         accountRepository.save(account);
     }
 
