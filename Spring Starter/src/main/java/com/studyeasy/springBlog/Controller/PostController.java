@@ -3,9 +3,11 @@ import com.studyeasy.springBlog.models.Account;
 import com.studyeasy.springBlog.models.Post;
 import com.studyeasy.springBlog.services.AccountService;
 import com.studyeasy.springBlog.services.PostService;
+import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -70,8 +72,11 @@ public class PostController {
 
     @PostMapping("/posts/add")
     @PreAuthorize("isAuthenticated()")
-    public String addPostHandler(@ModelAttribute Post post, Principal principal){
+    public String addPostHandler(@Valid @ModelAttribute Post post, BindingResult bindingResult, Principal principal){
 
+        if(bindingResult.hasErrors()) {
+            return "post_views/post_add";
+        }
         String authUser= "email";
         if (principal!=null){
             authUser = principal.getName();
@@ -98,7 +103,11 @@ public class PostController {
 
     @PostMapping("/posts/{id}/edit")
     @PreAuthorize("isAuthenticated()")
-    public String updatePost(@PathVariable Long id, @ModelAttribute Post post){
+    public String updatePost(@Valid @ModelAttribute Post post,BindingResult bindingResult, @PathVariable Long id ){
+
+        if(bindingResult.hasErrors()) {
+            return "post_views/post_edit";
+        }
 
         Optional<Post> optionalPost = postService.getById(id);
         if(optionalPost.isPresent()){

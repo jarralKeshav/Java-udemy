@@ -32,7 +32,7 @@ public class AccountController {
             return "account_views/register";
         }
         accountService.save(account);
-        return "redirect:/";
+        return "account_views/login";
     }
 
     @GetMapping("/login")

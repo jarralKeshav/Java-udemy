@@ -1,11 +1,9 @@
 package com.studyeasy.springBlog.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -17,6 +15,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Account {
 
     @Id
@@ -24,13 +23,13 @@ public class Account {
     private long id;
 
     @Email(message = "Invalid Email")
-    @NotEmpty(message = "email missing")
+    @NotBlank(message = "email missing")
     private String email;
 
     @NotEmpty(message = "Password missing")
     private String password;
 
-    @NotEmpty(message = "Fistname missing")
+    @NotEmpty(message = "Firstname missing")
     private String firstName;
 
     @NotEmpty(message = "LastName missing")
@@ -43,8 +42,6 @@ public class Account {
     private int age;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-
-    @NotEmpty(message = "Date of Birth missing")
     private LocalDate date_of_birth;
 
     private String photo;

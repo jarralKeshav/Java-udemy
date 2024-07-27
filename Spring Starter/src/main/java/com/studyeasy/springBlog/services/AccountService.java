@@ -3,6 +3,7 @@ import com.studyeasy.springBlog.models.Account;
 import com.studyeasy.springBlog.models.Authority;
 import com.studyeasy.springBlog.repositories.AccountRepository;
 import com.studyeasy.springBlog.utils.constants.Roles;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -18,6 +19,10 @@ import java.util.Optional;
 
 @Service
 public class AccountService implements UserDetailsService {
+
+    @Value("${spring.webflux.static-path-pattern}")
+    private String photo_prefix;
+
 
     private final AccountRepository accountRepository;
 
@@ -35,8 +40,10 @@ public class AccountService implements UserDetailsService {
            account.setRole(Roles.USER.getRole());
            }
        if(account.getPhoto()==null){
-           account.setPhoto("");
+        String path = photo_prefix.replace("**","images/imageProfile1.png");
+        account.setPhoto(path);
            }
+
         accountRepository.save(account);
     }
 

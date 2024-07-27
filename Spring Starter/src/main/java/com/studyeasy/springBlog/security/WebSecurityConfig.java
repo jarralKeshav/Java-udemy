@@ -2,6 +2,7 @@ package com.studyeasy.springBlog.security;
 
 import com.studyeasy.springBlog.utils.constants.Privileges;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,12 +11,12 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-    private static final String[] WHITELIST = {"/", "/login", "/register", "/static/**","/js/**", "/css/**", "/fonts/**",
- "/images/**","/db-console/**"
+    private static final String[] WHITELIST = {"/", "/login", "/register", "/resources/**", "/static/**", "/js/**", "/css/**", "/fonts/**", "/images/**", "/db-console/**"
 
     };
 
@@ -27,28 +28,7 @@ public class WebSecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(WHITELIST)
-                        .permitAll()
-                        .requestMatchers("/profile/**").authenticated()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/editor/**").hasRole("EDITOR")
-                        .requestMatchers("/test/**").hasAuthority(Privileges.ACCESS_ADMIN_PANEL.getPrivilegeName())
-                        .anyRequest()
-                        .authenticated())
-                .formLogin(form -> form.
-                        loginPage("/login").
-                        loginProcessingUrl("/login")
-                        .usernameParameter("email")
-                        .passwordParameter("password")
-                        .defaultSuccessUrl("/", true)
-                        .failureUrl("/login?error")
-                        .permitAll()).
-                logout(lOut -> lOut
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login"))
-                .rememberMe(Customizer.withDefaults());
+        http.authorizeHttpRequests((authorize) -> authorize.requestMatchers(WHITELIST).permitAll().requestMatchers("/profile/**").authenticated().requestMatchers("/admin/**").hasRole("ADMIN").requestMatchers("/editor/**").hasRole("EDITOR").requestMatchers("/test/**").hasAuthority(Privileges.ACCESS_ADMIN_PANEL.getPrivilegeName()).anyRequest().authenticated()).formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login").usernameParameter("email").passwordParameter("password").defaultSuccessUrl("/", true).failureUrl("/login?error").permitAll()).logout(lOut -> lOut.logoutUrl("/logout").logoutSuccessUrl("/login")).rememberMe(Customizer.withDefaults());
 
 
         //remove after upgrading the db from h2 file db
