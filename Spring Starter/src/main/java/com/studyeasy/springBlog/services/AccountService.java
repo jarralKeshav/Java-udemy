@@ -20,8 +20,9 @@ import java.util.Optional;
 @Service
 public class AccountService implements UserDetailsService {
 
-    @Value("${spring.webflux.static-path-pattern}")
+    @Value("${spring.mvc.static-path-pattern}")
     private String photo_prefix;
+//        private static final String PHOTO_PATH = "/resources/static/images/imageProfile.png";
 
 
     private final AccountRepository accountRepository;
@@ -41,6 +42,7 @@ public class AccountService implements UserDetailsService {
            }
        if(account.getPhoto()==null){
         String path = photo_prefix.replace("**","images/imageProfile1.png");
+
         account.setPhoto(path);
            }
 
