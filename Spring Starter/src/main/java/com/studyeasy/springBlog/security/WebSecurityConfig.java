@@ -17,11 +17,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class WebSecurityConfig   {
 
-
-
-
         private static final String[] WHITELIST = {
-             "/resources/static/**", "/", "/login", "/register", "/js/**", "/css/**", "/fonts/**", "/images/**",
+                "/", "/login", "/register",  "/js/**", "/css/**", "/fonts/**", "/images/**",
+                "/resources/static/**",
             "/db-console/**"
     };
 
@@ -62,6 +60,8 @@ public class WebSecurityConfig   {
 
 
 
+
+
         //remove after upgrading the db from h2 file db
         http.httpBasic(Customizer.withDefaults());
         http.csrf(AbstractHttpConfigurer::disable); // cross site request forgery
@@ -70,6 +70,8 @@ public class WebSecurityConfig   {
 
         return http.build();
     }
+
+
 }
 
 

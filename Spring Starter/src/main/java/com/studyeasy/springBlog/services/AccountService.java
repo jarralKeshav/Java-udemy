@@ -2,6 +2,7 @@ package com.studyeasy.springBlog.services;
 import com.studyeasy.springBlog.models.Account;
 import com.studyeasy.springBlog.models.Authority;
 import com.studyeasy.springBlog.repositories.AccountRepository;
+import com.studyeasy.springBlog.security.config.AppProperties;
 import com.studyeasy.springBlog.utils.constants.Roles;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,16 +21,16 @@ import java.util.Optional;
 @Service
 public class AccountService implements UserDetailsService {
 
-    @Value("${spring.mvc.static-path-pattern}")
-    private String photo_prefix;
+
 //        private static final String PHOTO_PATH = "/resources/static/images/imageProfile.png";
 
-
+    private  final AppProperties appProperties;
     private final AccountRepository accountRepository;
 
     private final PasswordEncoder passwordEncoder;
 
-    public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+    public AccountService(AppProperties appProperties, AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+        this.appProperties = appProperties;
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -41,7 +42,7 @@ public class AccountService implements UserDetailsService {
            account.setRole(Roles.USER.getRole());
            }
        if(account.getPhoto()==null){
-        String path = photo_prefix.replace("**","images/imageProfile1.png");
+        String path = appProperties.getPhotoPrefix() + "imageProfile1.png";
 
         account.setPhoto(path);
            }
@@ -73,5 +74,9 @@ public class AccountService implements UserDetailsService {
 
     public Optional<Account> findOneByEmail(String email) {
         return accountRepository.findByEmail(email);
+    }
+
+    public Optional<Account> findOneById(Long id) {
+        return accountRepository.findById(id);
     }
 }
