@@ -35,6 +35,9 @@ public class AppConfig {
     private String spring_mail_password;
 
 
+
+
+
     @Bean
     public JavaMailSender getJavaMailSender() {
          JavaMailSenderImpl mailSender = new JavaMailSenderImpl();

@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Table
 @Entity
 @Getter
 @Setter
@@ -52,7 +53,8 @@ public class Account {
     @OneToMany(mappedBy = "account")
     private List<Post> posts;
 
-    private String password_reset_token;
+    @Column(name = "token")
+    private String passwordResetToken;
 
     private LocalDateTime password_reset_token_expiry;
 

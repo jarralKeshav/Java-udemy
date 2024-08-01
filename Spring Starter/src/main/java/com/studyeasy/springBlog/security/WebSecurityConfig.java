@@ -4,6 +4,7 @@ import com.studyeasy.springBlog.utils.constants.Privileges;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -15,12 +16,13 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class WebSecurityConfig   {
 
         private static final String[] WHITELIST = {
-                "/", "/login", "/register",  "/js/**", "/css/**", "/fonts/**", "/images/**",
+                "/", "/login", "/register","/js/**", "/css/**", "/fonts/**", "/images/**",
                 "/resources/static/**",
-                "/forgot-password","/reset-password",  // added for forgot password
+                "/forgot-password","/reset-password", "/change-password", // added for forgot password
             "/db-console/**"
     };
 

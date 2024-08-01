@@ -8,9 +8,8 @@ import com.studyeasy.springBlog.utils.constants.AppUtil;
 import com.studyeasy.springBlog.utils.constants.email.EmailDetails;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import lombok.Value;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -39,7 +38,8 @@ import java.util.concurrent.TimeUnit;
 public class AccountController {
 
 
-
+    @Value("${site.domain}")
+    private String siteDomain;
 
     private final AppProperties appProperties;
     private final AccountService accountService;
@@ -71,6 +71,8 @@ public class AccountController {
 
     @GetMapping("/login")
     public String login(Model model) {
+
+
         return "account_views/login";
     }
 
@@ -194,7 +196,7 @@ public class AccountController {
         if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();   //doubt
             String reset_token = UUID.randomUUID().toString();
-            account.setPassword_reset_token(reset_token);
+            account.setPasswordResetToken(reset_token);
             account.setPassword_reset_token_expiry(LocalDateTime.now().plusMinutes(appProperties.getPassword_reset_token_timeout_minutes()));
             accountService.save(account);
 
@@ -202,7 +204,7 @@ public class AccountController {
 
 
             String reset_message =
-                    "This is the reset password link: http://localhost/reset_password?token=" + reset_token;
+                    "This is the reset password link: " +siteDomain + "change-password?token=" + reset_token;
             EmailDetails emailDetails = new EmailDetails(account.getEmail(), "Reset password for Blog demo",reset_message);
             try {
                 emailService.sendSimpleEmail(emailDetails);
@@ -226,6 +228,40 @@ public class AccountController {
             return "redirect:/forgot-password";
         }
 
+    }
+
+
+    @GetMapping("/change-password")
+    public String change_password(Model model, @RequestParam("token") String token, RedirectAttributes redirectAttributes) {
+        if(token.equals("")){
+            redirectAttributes.addFlashAttribute("error" , "Invalid Token");
+            return "redirect:/forgot-password";
+        }
+        Optional<Account> optionalAccount = accountService.findOneByToken(token);
+        if(optionalAccount.isPresent()) {
+            Account account = accountService.findOneById(optionalAccount.get().getId()).get();   // revise this
+            LocalDateTime now = LocalDateTime.now();
+            if(now.isAfter(optionalAccount.get().getPassword_reset_token_expiry())){
+                redirectAttributes.addFlashAttribute("error", "Token Expired");
+                return "redirect:/forgot-password";
+            }
+            model.addAttribute("account", account);
+            return "account_views/change_password";
+        }
+        redirectAttributes.addFlashAttribute("error", "Invalid token");
+        return "redirect:/forgot-password";
+    }
+
+    @PostMapping("/change-password")
+    public String post_change_password(@ModelAttribute Account account, RedirectAttributes redirectAttributes){
+
+        Account account_by_id = accountService.findOneById(account.getId()).get();
+        account_by_id.setPassword(account.getPassword());
+        account_by_id.setPasswordResetToken("");
+        accountService.save(account_by_id);
+
+        redirectAttributes.addFlashAttribute("message", "Password updated Successfully");
+        return "redirect:/login";
     }
 }
 
