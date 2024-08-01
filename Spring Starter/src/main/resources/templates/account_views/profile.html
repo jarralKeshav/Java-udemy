@@ -26,7 +26,7 @@
             <img th:src="@{${photo}}" class="rounded-circle"
                  style="width: 150px; float: left; padding: 10px 10px 10px 10px;" alt="Avatar"/>
 
-            <p th:text="${error}" th:if="${message ne null}" class="alert alert-danger"></p>
+            <p th:text="${error}" th:if="${error ne null}" class="alert alert-danger"></p>
             <form method="post" th:action="@{/update_photo}" enctype="multipart/form-data">
                 <div class="form-group">
                     <input type="file" name="file" class="form-control-file">

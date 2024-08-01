@@ -3,10 +3,14 @@ package com.studyeasy.springBlog.Controller;
 import com.studyeasy.springBlog.models.Account;
 import com.studyeasy.springBlog.security.config.AppProperties;
 import com.studyeasy.springBlog.services.AccountService;
+import com.studyeasy.springBlog.services.EmailService;
 import com.studyeasy.springBlog.utils.constants.AppUtil;
+import com.studyeasy.springBlog.utils.constants.email.EmailDetails;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.Value;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -25,20 +29,29 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Controller
 public class AccountController {
 
+
+
+
     private final AppProperties appProperties;
     private final AccountService accountService;
+    private final EmailService emailService;
 
-    public AccountController(AccountService accountService, HttpSession httpSession, AppProperties appProperties) {
+    public AccountController(AccountService accountService, HttpSession httpSession, AppProperties appProperties, EmailService emailService) {
         this.accountService = accountService;
         this.appProperties = appProperties;
+        this.emailService = emailService;
     }
+
+
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -148,14 +161,14 @@ public class AccountController {
                 if (optionalAccount.isPresent()) {
                     Account account = optionalAccount.get();
                     Account account_by_id = accountService.findOneById(account.getId()).get();
-                    String relative_fileLocation ="uploads/" + final_photo_name;
+                    String relative_fileLocation = "uploads/" + final_photo_name;
                     account_by_id.setPhoto(relative_fileLocation);
                     accountService.save(account_by_id);
 
                 }
                 try {
                     TimeUnit.SECONDS.sleep(5);
-                }catch (InterruptedException ie) {
+                } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
                 }
                 return "redirect:/profile";
@@ -166,7 +179,52 @@ public class AccountController {
 
 
         }
-            return "redirect:/?error";
+        return "redirect:/?error";
+
+    }
+
+    @GetMapping("/forgot-password")
+    public String forgot_password(Model model) {
+        return "account_views/forgot_password";
+    }
+
+    @PostMapping("/reset-password")
+    public String reset_password(@RequestParam("email") String _email, RedirectAttributes redirectAttributes, Model model) {
+        Optional<Account> optionalAccount = accountService.findOneByEmail(_email);
+        if (optionalAccount.isPresent()) {
+            Account account = optionalAccount.get();   //doubt
+            String reset_token = UUID.randomUUID().toString();
+            account.setPassword_reset_token(reset_token);
+            account.setPassword_reset_token_expiry(LocalDateTime.now().plusMinutes(appProperties.getPassword_reset_token_timeout_minutes()));
+            accountService.save(account);
+
+        //.....................................................................
+
+
+            String reset_message =
+                    "This is the reset password link: http://localhost/reset_password?token=" + reset_token;
+            EmailDetails emailDetails = new EmailDetails(account.getEmail(), "Reset password for Blog demo",reset_message);
+            try {
+                emailService.sendSimpleEmail(emailDetails);
+                redirectAttributes.addFlashAttribute("message", "Password reset email sent");
+            } catch (Exception e) {
+                redirectAttributes.addFlashAttribute("error", "Error sending email, contact admin");
+                return "redirect:/forgot-password";
+                // Log the exception details for further debugging
+            }
+            redirectAttributes.addFlashAttribute("message", "Password reset email sent");
+
+
+            //.....................................................................
+
+
+
+            return "redirect:/login";
+
+        } else {
+            redirectAttributes.addFlashAttribute("error", "No user found with the email supplied");
+            return "redirect:/forgot-password";
+        }
 
     }
 }

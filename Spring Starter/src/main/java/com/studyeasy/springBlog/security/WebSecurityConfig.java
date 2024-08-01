@@ -20,6 +20,7 @@ public class WebSecurityConfig   {
         private static final String[] WHITELIST = {
                 "/", "/login", "/register",  "/js/**", "/css/**", "/fonts/**", "/images/**",
                 "/resources/static/**",
+                "/forgot-password","/reset-password",  // added for forgot password
             "/db-console/**"
     };
 
@@ -56,7 +57,7 @@ public class WebSecurityConfig   {
                         .permitAll()).logout(lOut -> lOut
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login"))
-                .rememberMe(Customizer.withDefaults());
+                .rememberMe(rememberMe->rememberMe.rememberMeParameter("remember-me"));
 
 
 

@@ -44,8 +44,8 @@ public class SeedData implements CommandLineRunner {
         Account account03 = new Account();
         Account account04 = new Account();
 
-        account01.setEmail("account01@outlook.com");
-        account01.setPassword("password");
+        account01.setEmail("jaralkeshav@gmail.com");
+        account01.setPassword("password@01");
         account01.setFirstName("Account01");
         account01.setLastName("lastname01");
         account01.setAge(22);
@@ -68,7 +68,7 @@ public class SeedData implements CommandLineRunner {
         account02.setAuthoritySet(authoritySet);
 
         account03.setEmail("admin@admin.com");
-        account03.setPassword("admin123");
+        account03.setPassword("admin@123");
         account03.setFirstName("Admin");
         account03.setLastName("AdminLastName");
         account03.setAge(23);
@@ -77,7 +77,7 @@ public class SeedData implements CommandLineRunner {
         account03.setRole(Roles.ADMIN.getRole());
 
         account04.setEmail("editor@editor.com");
-        account04.setPassword("editor123");
+        account04.setPassword("editor@123");
         account04.setFirstName("Editor");
         account04.setLastName("EditorLastName");
         account04.setAge(20);

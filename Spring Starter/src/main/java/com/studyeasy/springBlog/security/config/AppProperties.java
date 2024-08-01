@@ -14,6 +14,6 @@ public class AppProperties {
     // getters and setters
     private String photoPrefix;
 
-    private String uploadPhotoPrefix;
+    private int password_reset_token_timeout_minutes;
 
 }
